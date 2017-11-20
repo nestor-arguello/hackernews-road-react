@@ -40,9 +40,13 @@ class App extends Component {
   }
   
   onDismiss = id => {
-    const isNotId = (item) => item.objectID !== id;
+    const isNotId = item => item.objectID !== id;
     const updateHits = this.state.result.hits.filter(isNotId);
-    this.setState({ list: updateList })
+     console.log(updateHits);
+     console.log(this.state.result);
+    this.setState({ 
+      result: {...this.state.result, hits: updateHits }
+    });
   }
   onSearchChange = event => {
     this.setState({ searchTerm: event.target.value })
@@ -50,10 +54,6 @@ class App extends Component {
   render() {
     const { result, searchTerm } = this.state;
 
-    if (!result) {
-      return null;
-    }
-    
     return (
       <div className="page">
         <div className="interactions">
@@ -63,11 +63,13 @@ class App extends Component {
           >
             Search
           </Search>
-          <Table 
-            list={result.hits}
-            pattern={searchTerm}
-            onDismiss={this.onDismiss}
-          />
+          { result &&
+            <Table 
+              list={result.hits}
+              pattern={searchTerm}
+              onDismiss={this.onDismiss}
+            />
+          }
         </div>
       </div>
     );
