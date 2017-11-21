@@ -25,11 +25,24 @@ class App extends Component {
   }
 
   setSearchTopStories = result => {
-    this.setState({ result });
+    const { hits, page } = result;
+
+    const oldHits = page !== 0
+      ? this.state.result.hits
+      : [];
+
+    const updatedHits = [
+      ...oldHits,
+      ...hits
+    ];
+    
+    this.setState({ 
+      result: { hits: updatedHits, page }
+     });
   }
 
   fetchSearchTopStories = (searchTerm, page = 0) => {
-    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}`)
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}`)
       .then(response => response.json())
       .then(result => this.setSearchTopStories(result))
       .catch(e => e);
